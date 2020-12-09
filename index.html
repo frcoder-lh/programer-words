@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<link rel="Shortcut Icon" href="favicon.ico" type="image/x-icon"/>
+        <title>程序猿常用单词</title>
+    </head>
+    <style type="text/css">
+
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        body {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+        }
+
+        #content {
+            width: 100%;
+            max-width: 1000px;
+            flex: 1;
+        }
+
+        button {
+            background-color: rgb(143, 111, 182);
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 25px;
+            margin: 15px;
+        }
+
+        table {
+            width: 100%;
+            font-size: 30px;
+            font-family: Verdana;
+        }
+
+        table thead, table tr {
+            border-top-width: 1px;
+            border-top-style: solid;
+            border-top-color: rgb(211, 202, 221);
+        }
+
+        table th, table td {
+            padding: 5px 10px;
+            line-height: 35px;
+            color: rgb(95, 74, 121);
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        table th {
+            background: rgb(223, 216, 232)
+        }
+
+        table tr:nth-child(even) {
+            background: rgb(223, 216, 232)
+        }
+
+        table tr:nth-child(odd) {
+            background: #FFF
+        }
+
+        table tr.play td {
+            font-weight: bold;
+        }
+
+    </style>
+    <body>
+        <div id="content">
+            <table>
+                <thead>
+                    <tr>
+                        <th>
+                            单词列表
+                            <button onclick="play()">依次播放</button>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="word-table"></tbody>
+            </table>
+        </div>
+    </body>
+    <script type="text/javascript">
+
+        // 单词列表写在这里，或者远程请求后赋值给此变量
+        var words = [
+            {text: "access"},
+            {text: "Adobe"},
+            {text: "admin"},
+            {text: "adversarial"},
+            {text: "agile"},
+            {text: "amazon"},
+            {text: "analogy"},
+            {text: "Angular"},
+            {text: "AJAX"},
+            {text: "alias"},
+            {text: "Apache"},
+            {text: "app"},
+            {text: "archive"},
+            {text: "array"},
+            {text: "ASCII"},
+            {text: "aspect"},
+            {text: "avatar"},
+            {text: "Azure"},
+            {text: "bind"},
+            {text: "cache"},
+            {text: "clang"},
+            {text: "daemon"},
+            {text: "debt"},
+            {text: "deny"},
+            {text: "deprecate"},
+            {text: "deque"},
+            {text: "digest"},
+            {text: "Dijkstra"},
+            {text: "Django"},
+            {text: "doc"},
+            {text: "epoch"},
+            {text: "execute"},
+            {text: "executor"},
+            {text: "event"},
+            {text: "facade"},
+            {text: "fedora"},
+            {text: "format"},
+            {text: "gauge"},
+            {text: "Git"},
+            {text: "GNU"},
+            {text: "Grafana"},
+            {text: "GraphQL"},
+            {text: "GUI"},
+            {text: "Haskell"},
+            {text: "height"},
+            {text: "hidden"},
+            {text: "image"},
+            {text: "implement"},
+            {text: "integer"},
+            {text: "issue"},
+            {text: "Java"},
+            {text: "jpg"},
+            {text: "key"},
+            {text: "Kubernetes*"},
+            {text: "lambda"},
+            {text: "linear"},
+            {text: "Linux"},
+            {text: "locale"},
+            {text: "Lucene"},
+            {text: "main"},
+            {text: "margin"},
+            {text: "matrix"},
+            {text: "maven"},
+            {text: "Microsoft"},
+            {text: "miscellaneous"},
+            {text: "module"},
+            {text: "nginx"},
+            {text: "null"},
+            {text: "obsolete"},
+            {text: "OS X"},
+            {text: "phantom"},
+            {text: "parameter"},
+            {text: "privilege"},
+            {text: "Prometheus"},
+            {text: "putty"},
+            {text: "Qt"},
+            {text: "query"},
+            {text: "Realm"},
+            {text: "reconcile"},
+            {text: "Redux"},
+            {text: "resume"},
+            {text: "resolved"},
+            {text: "resort"},
+            {text: "retina"},
+            {text: "route"},
+            {text: "San Jose"},
+            {text: "safari"},
+            {text: "scheme"},
+            {text: "scala"},
+            {text: "segue"},
+            {text: "SQL"},
+            {text: "sudo"},
+            {text: "suite"},
+            {text: "thymeleaf"},
+            {text: "tuple"},
+            {text: "typical"},
+            {text: "Ubuntu"},
+            {text: "Vagrant"},
+            {text: "variable"},
+            {text: "verbose"},
+            {text: "vue"},
+            {text: "width"},
+            {text: "YouTube"},
+        ];
+
+        
+        for (var i = 0; i < words.length; i++) {
+            var wordRow = document.getElementById("word-table").insertRow();
+            wordRow.index = i;
+            wordRow.id = words[i].text;
+            wordRow.insertCell(0).innerText = words[i].text;
+            wordRow.onclick = function (e) {
+                playWordInIndex(e.currentTarget.index);
+            }
+        }
+
+        function play() {
+            playWordFromIndex(0);
+        }
+
+        function playWordFromIndex(i) {
+            if (words && words[i]) {
+                playWordInIndex(i, function () {
+                    playWordFromIndex(i + 1);
+                });
+            }
+        }
+
+        function playWordInIndex(i, callback) {
+            if (words && words[i]) {
+                document.getElementById(words[i].text).classList.add("play");
+                if (words[i].voice == undefined) {
+                    words[i].voice = new Audio("https://dict.youdao.com/dictvoice?type=2&audio=" + words[i].text);
+                }
+                words[i].voice.play();
+                words[i].voice.onended = function () {
+                    document.getElementById(words[i].text).classList.remove("play");
+                    if (callback) callback();
+                };
+            }
+        }
+
+
+    </script>
+</html>
