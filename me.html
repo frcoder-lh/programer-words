@@ -1,146 +1,226 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-		<link rel="Shortcut Icon" href="favicon.ico" type="image/x-icon"/>
-        <title>程序猿常用单词</title>
-    </head>
-    <style type="text/css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="Shortcut Icon" href="favicon.ico" type="image/x-icon" />
+    <title>程序猿常用单词</title>
+  </head>
+  <style type="text/css">
+    * {
+      padding: 0;
+      margin: 0;
+    }
 
-        * {
-            padding: 0;
-            margin: 0;
+    body {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+    }
+
+    #content {
+      width: 100%;
+      max-width: 1000px;
+      flex: 1;
+    }
+
+    button {
+      background-color: rgb(143, 111, 182);
+      border: none;
+      color: white;
+      padding: 15px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 25px;
+      margin: 15px;
+    }
+
+    table {
+      width: 100%;
+      font-size: 30px;
+      font-family: Verdana;
+    }
+
+    table thead,
+    table tr {
+      border-top-width: 1px;
+      border-top-style: solid;
+      border-top-color: rgb(211, 202, 221);
+    }
+
+    table th,
+    table td {
+      padding: 5px 10px;
+      line-height: 35px;
+      color: rgb(95, 74, 121);
+      vertical-align: middle;
+      text-align: center;
+    }
+
+    table th {
+      background: rgb(223, 216, 232);
+    }
+
+    table tr:nth-child(even) {
+      background: rgb(223, 216, 232);
+    }
+
+    table tr:nth-child(odd) {
+      background: #fff;
+    }
+
+    table tr.play td {
+      font-weight: bold;
+    }
+
+    #table-title.success {
+      color: green;
+    }
+
+    #table-title.error {
+      color: red;
+    }
+  </style>
+  <body>
+    <div id="content">
+      <table>
+        <thead>
+          <tr>
+            <th>
+              <span id="table-title">单词列表</span>
+              <button onclick="play()">依次播放</button>
+            </th>
+          </tr>
+        </thead>
+        <tbody id="word-table"></tbody>
+      </table>
+    </div>
+  </body>
+  <script type="text/javascript">
+    // 单词列表写在这里，或者远程请求后赋值给words变量
+    fetch(
+      "https://i2egbesf.lc-cn-n1-shared.com/1.1/classes/words?order=text&keys=-createdAt%2C-updatedAt%2C-objectId",
+      {
+        headers: {
+          "x-lc-id": "I2EgBESFxAuSNOW4v52ggS4W-gzGzoHsz",
+          "x-lc-key": "aJt40nloKDM6qfhUL7dNOqUy",
+        },
+      }
+    )
+      .then(function (res) {
+        return res.json();
+      })
+      .then(function (response) {
+        words = response.results;
+        for (var i = 0; i < words.length; i++) {
+          var wordRow = document.getElementById("word-table").insertRow();
+          wordRow.index = i;
+          wordRow.id = words[i].text;
+          wordRow.insertCell(0).innerText = words[i].text;
+          wordRow.onclick = function (e) {
+            playWordInIndex(e.currentTarget.index);
+          };
         }
+      });
 
-        body {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-        }
+    function play() {
+      playWordFromIndex(0);
+    }
 
-        #content {
-            width: 100%;
-            max-width: 1000px;
-            flex: 1;
-        }
-
-        button {
-            background-color: rgb(143, 111, 182);
-            border: none;
-            color: white;
-            padding: 15px 32px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 25px;
-            margin: 15px;
-        }
-
-        table {
-            width: 100%;
-            font-size: 30px;
-            font-family: Verdana;
-        }
-
-        table thead, table tr {
-            border-top-width: 1px;
-            border-top-style: solid;
-            border-top-color: rgb(211, 202, 221);
-        }
-
-        table th, table td {
-            padding: 5px 10px;
-            line-height: 35px;
-            color: rgb(95, 74, 121);
-            vertical-align: middle;
-            text-align: center;
-        }
-
-        table th {
-            background: rgb(223, 216, 232)
-        }
-
-        table tr:nth-child(even) {
-            background: rgb(223, 216, 232)
-        }
-
-        table tr:nth-child(odd) {
-            background: #FFF
-        }
-
-        table tr.play td {
-            font-weight: bold;
-        }
-
-    </style>
-    <body>
-        <div id="content">
-            <table>
-                <thead>
-                    <tr>
-                        <th>
-                            单词列表
-                            <button onclick="play()">依次播放</button>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody id="word-table"></tbody>
-            </table>
-        </div>
-    </body>
-    <script type="text/javascript">
-
-        // 单词列表写在这里，或者远程请求后赋值给words变量
-         fetch("https://i2egbesf.lc-cn-n1-shared.com/1.1/classes/words?order=text&keys=-createdAt%2C-updatedAt%2C-objectId", {
-          "headers": {
-            "x-lc-id": "I2EgBESFxAuSNOW4v52ggS4W-gzGzoHsz",
-            "x-lc-key": "aJt40nloKDM6qfhUL7dNOqUy"
-          }
-        }).then(function(res) {
-            return res.json();
-        }).then(function(response) {
-            words = response.results;
-            for (var i = 0; i < words.length; i++) {
-                var wordRow = document.getElementById("word-table").insertRow();
-                wordRow.index = i;
-                wordRow.id = words[i].text;
-                wordRow.insertCell(0).innerText = words[i].text;
-                wordRow.onclick = function (e) {
-                    playWordInIndex(e.currentTarget.index);
-                }
-            }
+    function playWordFromIndex(i) {
+      if (words && words[i]) {
+        playWordInIndex(i, function () {
+          playWordFromIndex(i + 1);
         });
-        
+      }
+    }
 
-        function play() {
-            playWordFromIndex(0);
+    function playWordInIndex(i, callback) {
+      if (words && words[i]) {
+        document.getElementById(words[i].text).classList.add("play");
+        if (words[i].voice == undefined) {
+          words[i].voice = new Audio(
+            "https://dict.youdao.com/dictvoice?type=2&audio=" + words[i].text
+          );
         }
+        words[i].voice.play();
+        words[i].voice.onended = function () {
+          document.getElementById(words[i].text).classList.remove("play");
+          if (callback) callback();
+        };
+      }
+    }
 
-        function playWordFromIndex(i) {
-            if (words && words[i]) {
-                playWordInIndex(i, function () {
-                    playWordFromIndex(i + 1);
-                });
-            }
-        }
+    var elem = document.getElementById("table-title");
 
-        function playWordInIndex(i, callback) {
-            if (words && words[i]) {
-                document.getElementById(words[i].text).classList.add("play");
-                if (words[i].voice == undefined) {
-                    words[i].voice = new Audio("https://dict.youdao.com/dictvoice?type=2&audio=" + words[i].text);
-                }
-                words[i].voice.play();
-                words[i].voice.onended = function () {
-                    document.getElementById(words[i].text).classList.remove("play");
-                    if (callback) callback();
-                };
-            }
-        }
+    function longPressCallback() {
+      var word = trim(prompt());
+      if (word != "") {
+        fetch("https://i2egbesf.lc-cn-n1-shared.com/1.1/classes/words", {
+          headers: {
+            "content-type": "application/json",
+            "x-lc-id": "I2EgBESFxAuSNOW4v52ggS4W-gzGzoHsz",
+            "x-lc-key": "aJt40nloKDM6qfhUL7dNOqUy",
+          },
+          body: JSON.stringify({
+            text: word,
+            ACL: {
+              "*": {
+                read: true,
+              },
+            },
+          }),
+          method: "POST",
+        })
+          .then(function (res) {
+            return res.json();
+          })
+          .then(function (response) {
+            elemClass = response.error ? "error" : "success";
+            elem.classList.add(elemClass);
+            setTimeout(function () {
+              elem.classList.remove(elemClass);
+            }, 1000);
+          });
+      }
+    }
+    listenLongPress(elem, longPressCallback);
 
+    function listenLongPress(elem, callback) {
+      var timer = null;
 
-    </script>
+      var touchstartHander = function (event) {
+        event.preventDefault();
+        timer = setTimeout(callback, 500);
+      };
+
+      var touchmoveHander = function (event) {
+        event.preventDefault();
+        clearTimeout(timer);
+        timer = null;
+      };
+
+      var touchendHander = function (event) {
+        event.preventDefault();
+        clearTimeout(timer);
+        return false;
+      };
+      // 移动端
+      elem.addEventListener("touchstart", touchstartHander, false);
+      elem.addEventListener("touchmove", touchmoveHander, false);
+      elem.addEventListener("touchend", touchendHander, false);
+
+      // PC端
+      elem.addEventListener("mousedown", touchstartHander, false);
+      elem.addEventListener("mousemove", touchmoveHander, false);
+      elem.addEventListener("mouseup", touchendHander, false);
+    }
+
+    function trim(str) {
+      return str.replace(/(^\s*)|(\s*$)/g, "");
+    }
+  </script>
 </html>
